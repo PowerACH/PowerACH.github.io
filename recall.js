@@ -1,15 +1,28 @@
+//THE FIRST CLICK//
+let activeCard = false;
+
+//CHOICE VARIABLES//
+let firstChoice;
+let secondChoice;
+
+//DISABLES CARDS WHILE PICKING 
+let stopBoard = false;
+
+//MODAL VARIABLE//
 let modal = document.getElementById("modalContainer")
+
+//MODAL BLUR FEATURE//
 let blur = document.getElementById("memoryWrap")
 
-//Match Counter//
+//MATCH COUNTER//
 let matchCards = 0;
 // let match = document.getElementById('matches');
 
-//Moves Counter//
+//MOVES COUNTER//
 let moves = 0;
 // let moveCounter = document.getElementById('moves');
 
-//Start Timer on first flip//
+//TIMER (STARTS AFTER FIRST CLICK)//
 let clock;
 function moveFunc() {
     moves += 1
@@ -19,7 +32,7 @@ function moveFunc() {
     }
 }
 
-//Game Timer//
+//GAME TIMER//
 let seconds = 00;
 let s = document.getElementById('seconds');
 let m = document.getElementById('minutes');
@@ -29,7 +42,7 @@ function currentTime() {
     m.innerHTML = formatt(Math.trunc(seconds / 60))
 }
 
-//Game Timer Formatting//
+//GAME TIMER FORMATTING//
 function formatt(x) {
     let xvalue = x + "";
     if (xvalue.length < 2) {
@@ -39,20 +52,19 @@ function formatt(x) {
     }
 }
 
-//Stop the Clock Interval//
+//STOP THE CLOCK//
 function stopClock() {
     clearInterval(clock)
-    
 }
 
-//Timer Reset//
+//TIMER RESET//
 function timerReset() {
     seconds = 0;
     minute = 0;
 }
 
 
-///Player Connection///
+///PLAYER PROPERTIES///
 let playerOne = {
     turn: true,
     matches: 0
@@ -69,61 +81,60 @@ let pTwoMatch = document.getElementById('pTwo');
 
 // ******************Match Board Functions*****************//
 
-const memoryCard = window.document.querySelectorAll(".card");//enables card  card div
+//CARD VARIABLE//
+const memoryCard = window.document.querySelectorAll(".card");
+//ALLOWS CARDS TO BE CLICKABLE
+memoryCard.forEach(card => card.addEventListener("click", cardTurn))
 
-memoryCard.forEach(card => card.addEventListener("click", flipCard))//allows cards to be clickable
 
-let flippedCard = false;
-let firstChoice;
-let secondChoice;
-let stopBoard = false;//disable cards while picking 
 
-function flipCard() {
-    moveFunc()
+function cardTurn() {
+    moveFunc()//STARTS MOVE COUNTER//
     if (stopBoard) {
         return
     }
     if (this === firstChoice) {
         return
     }
-    this.classList.toggle('flip');//Toggles between a class name for an element. 
+    
+    this.classList.toggle('flip'); 
 
-    if (!flippedCard) {
-        //first card choice
-        flippedCard = true;
+    if (!activeCard) {
+        //FIRST CARD CHOICE
+        activeCard = true;
         firstChoice = this;
-
         return
-        //second card choice
     } else {
-        flippedCard = false;
+        //SECOND CARD CHOICE
+        activeCard = false;
         secondChoice = this;
-
         matched()
     }
 }
 
+//CHECKS FOR CARD MATCH//
 function matched() {
-    //when cards match, keep cards open
-    if (firstChoice.dataset.name === secondChoice.dataset.name) { //disable cards
 
+    if (firstChoice.dataset.name === secondChoice.dataset.name) { 
+        
+        //WILL KEEP CARDS OPEN IF MATCHED//
+        
         matchCards += 1;
         // match.innerHTML = matchCards;
-        firstChoice.removeEventListener('click', flipCard)
-        secondChoice.removeEventListener('click', flipCard)
+        firstChoice.removeEventListener('click', cardTurn)
+        secondChoice.removeEventListener('click', cardTurn)
         resetBoard()
         if (playerOne.turn == true) {
             playerOne.matches += 1
             pOneMatch.innerHTML = playerOne.matches
-        }
-        if (playerTwo.turn == true) {
+        } else if (playerTwo.turn == true) {
             playerTwo.matches += 1
             pTwoMatch.innerHTML = playerTwo.matches
         }
         setTimeout(gameOver, 700)
 
 
-        //unflip cards when not a match
+        //UNFLIP CARDS AFTER NO MATCH
     } else {
         stopBoard = true;
         setTimeout(() => {
@@ -136,38 +147,27 @@ function matched() {
     }
 }
 
-
+//BOARD RESETS 
 function resetBoard() {
-    flippedCard = false
+    activeCard = false
     stopBoard = false
     firstChoice = null
     secondChoice = null
 
 }
 
-// shuffles cards after each reload
-// (function shuffle() {
-//     memoryCard.forEach(card => {
-//         let random = Math.floor(Math.random() * 16)
-//         card.style.order = random;
-//     })
-// })()
+// SHUFFLES CARDS//
+(function shuffle() {
+    memoryCard.forEach(card => {
+        let random = Math.floor(Math.random() * 16)
+        card.style.order = random;
+    })
+})()
 // ///////////////////////////////////////////
 
 
-// function shuffleArray(array) {
-//     for (var i = array.length - 1; i > 0; i--) {
-//         var j = Math.floor(Math.random() * (i + 1));
-//         var temp = array[i];
-//         array[i] = array[j];
-//         array[j] = temp;
-//     }
-// }
-
-
-
-
-function gameOver() {//After all cards matched//
+//AFTER ALL CARD ARE MATCHED//
+function gameOver() {
     if (matchCards === 8) {
         stopClock() 
         
@@ -185,12 +185,36 @@ function gameOver() {//After all cards matched//
     }
 }
 
-
-
-
+//MODAL RESTART BUTTON//
 function startGame() {
     window.location.reload
+    sortTable()
 }
 
+// function shuffleArray(array) {
+//     for (var i = array.length - 1; i > 0; i--) {
+//       var j = Math.floor(Math.random() * (i + 1));
+//       var temp = array[i];
+//       array[i] = array[j];
+//       array[j] = temp;
+//     }
+//   }
+
+// function shuffleArray(array) {
+//     for (var i = array.length - 1; i > 0; i--) {
+//         var j = Math.floor(Math.random() * (i + 1));
+//         var temp = array[i];
+//         array[i] = array[j];
+//         array[j] = temp;
+//     }
+// }
 
 
+// (function turns() {
+//     if(playerOne.turn == true) {
+//         document.getElementById("msg1").innerHTML = "PLAYER ONES TURN"
+//     } else {
+//         alert("PLAYER TWOS TURN")
+//         document.getElementById("msg1").innerHTML = "PLAYER TWOS TURN"
+//     }
+// })()

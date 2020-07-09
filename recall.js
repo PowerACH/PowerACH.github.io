@@ -1,3 +1,6 @@
+//ADD SOLO PLAYER OPTIONS AND STARTING MODAL//
+
+
 //THE FIRST CLICK//
 let activeCard = false;
 
@@ -170,11 +173,11 @@ function resetBoard() {
 function gameOver() {
     if (matchCards === 8) {
         stopClock() 
-        
+        //MODAL POP UP//
         modal.classList.toggle("after")
         memoryWrap.classList.toggle("blur")
        
-
+        //MODAL MESSAGE//
         if (playerOne.matches > playerTwo.matches) {
             document.getElementById("winnerMessage").innerHTML = ("Player One Wins!")
         } else if (playerTwo.matches > playerOne.matches) {
@@ -188,19 +191,9 @@ function gameOver() {
 //MODAL RESTART BUTTON//
 function startGame() {
     window.location.reload
-    sortTable()
 }
 
-// function shuffleArray(array) {
-//     for (var i = array.length - 1; i > 0; i--) {
-//       var j = Math.floor(Math.random() * (i + 1));
-//       var temp = array[i];
-//       array[i] = array[j];
-//       array[j] = temp;
-//     }
-//   }
-
-// function shuffleArray(array) {
+// function shuffle(array) {
 //     for (var i = array.length - 1; i > 0; i--) {
 //         var j = Math.floor(Math.random() * (i + 1));
 //         var temp = array[i];
